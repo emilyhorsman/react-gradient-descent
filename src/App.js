@@ -3,9 +3,10 @@ import './App.css';
 import {
 	VictoryAxis,
 	VictoryChart,
+	VictoryLabel,
 	VictoryLine,
 	VictoryScatter,
-	VictoryTheme
+	VictoryTheme,
 } from 'victory';
 
 import { GradientDescentOptimizer, randomLinear } from './GradientDescent';
@@ -158,6 +159,12 @@ class App extends Component {
 				<span className="Charts">
 					<span>
 						<VictoryChart {...chartProps}>
+							<VictoryLabel
+								text="Mean Squared Error over descent iterations"
+								x={50}
+								y={30}
+							/>
+
 							<VictoryLine
 								data={costs}
 							/>
@@ -165,9 +172,25 @@ class App extends Component {
 								crossAxis={false}
 							/>
 							<VictoryAxis
+								fixLabelOverlap={true}
 								crossAxis={false}
 								dependentAxis
 							/>
+
+							{!isPlaying && costs.length === 0 &&
+								<VictoryLabel
+									text="Press Play!"
+									x={175}
+									y={175}
+									textAnchor="middle"
+									style={{
+										fontSize: 24,
+										fill: 'grey',
+										stroke: 'grey'
+									}}
+								/>
+							}
+
 						</VictoryChart>
 					</span>
 
@@ -175,11 +198,23 @@ class App extends Component {
 						<VictoryChart {...chartProps}>
 							<VictoryScatter
 								data={trainingData}
+								style={{
+									data: {
+										fill: 'tomato'
+									}
+								}}
 							/>
 
 							<VictoryLine
 								data={predictionsData}
 								domain={{ x: [0, 10], y: [0, maxY] }}
+								style={{
+									data: {
+										stroke: 'magenta',
+										strokeWidth: 3,
+										strokeLinecap: 'round'
+									}
+								}}
 							/>
 
 							<VictoryAxis
