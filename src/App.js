@@ -212,71 +212,74 @@ class App extends Component {
 					</p>
 				</span>
 
-				<VictoryChart {...chartProps} className="Chart Chart--left">
-					<VictoryLabel
-						text="Mean squared error over descent iterations"
-						x={50}
-						y={30}
-					/>
-
-					<VictoryLine
-						data={costs}
-					/>
-					<VictoryAxis
-						crossAxis={false}
-					/>
-					<VictoryAxis
-						fixLabelOverlap={true}
-						crossAxis={false}
-						dependentAxis
-					/>
-
-					{!isPlaying && costs.length === 0 &&
+				<span className="Chart Chart--left">
+					<VictoryChart {...chartProps}>
 						<VictoryLabel
-							text="Press Play!"
-							x={175}
-							y={175}
-							textAnchor="middle"
+							text="Mean squared error over descent iterations"
+							x={50}
+							y={30}
+						/>
+
+						<VictoryLine
+							data={costs}
+						/>
+						<VictoryAxis
+							crossAxis={false}
+						/>
+						<VictoryAxis
+							fixLabelOverlap={true}
+							crossAxis={false}
+							dependentAxis
+						/>
+
+						{!isPlaying && costs.length === 0 &&
+							<VictoryLabel
+								text="Press Play!"
+								x={175}
+								y={175}
+								textAnchor="middle"
+								style={{
+									fontSize: 24,
+									fill: 'grey',
+									stroke: 'grey'
+								}}
+							/>
+						}
+					</VictoryChart>
+				</span>
+
+				<span className="Chart Chart--right">
+					<VictoryChart {...chartProps}>
+						<VictoryScatter
+							data={trainingData}
 							style={{
-								fontSize: 24,
-								fill: 'grey',
-								stroke: 'grey'
+								data: {
+									fill: 'tomato'
+								}
 							}}
 						/>
-					}
 
-				</VictoryChart>
+						<VictoryLine
+							data={predictionsData}
+							domain={{ x: [0, 10], y: [0, maxY] }}
+							style={{
+								data: {
+									stroke: 'magenta',
+									strokeWidth: 3,
+									strokeLinecap: 'round'
+								}
+							}}
+						/>
 
-				<VictoryChart {...chartProps} className="Chart Chart--right">
-					<VictoryScatter
-						data={trainingData}
-						style={{
-							data: {
-								fill: 'tomato'
-							}
-						}}
-					/>
-
-					<VictoryLine
-						data={predictionsData}
-						domain={{ x: [0, 10], y: [0, maxY] }}
-						style={{
-							data: {
-								stroke: 'magenta',
-								strokeWidth: 3,
-								strokeLinecap: 'round'
-							}
-						}}
-					/>
-
-					<VictoryAxis
-						crossAxis={false}
-					/>
-					<VictoryAxis
-						crossAxis={false}
-						dependentAxis
-					/>
-				</VictoryChart>
+						<VictoryAxis
+							crossAxis={false}
+						/>
+						<VictoryAxis
+							crossAxis={false}
+							dependentAxis
+						/>
+					</VictoryChart>
+				</span>
 			</span>
 		);
 	}

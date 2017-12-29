@@ -96,3 +96,50 @@
 .Button:active {
     background-color: #4baa74;
 }
+
+
+@media (max-width: 900px) {
+    .App__Explainer {
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row-start: 1;
+    }
+
+
+    .Controls {
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row-start: 2;
+    }
+
+
+    .Chart {
+        grid-row-start: 3;
+    }
+
+
+    .Chart--left {
+        grid-column-start: 1;
+        grid-column-end: 2;
+    }
+
+    .Chart--right {
+        grid-column-start: 2;
+        grid-column-end: 3;
+    }
+}
+
+
+@media (max-width: 550px) {
+    .Chart--left {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+    .Chart--right {
+        grid-row-start: 4;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+}
