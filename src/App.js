@@ -2,87 +2,156 @@ import React, { Component } from 'react';
 import './App.css';
 import math from 'mathjs';
 import {
+	VictoryAxis,
 	VictoryChart,
 	VictoryLine,
-	VictoryScatter
+	VictoryScatter,
+	VictoryTheme
 } from 'victory';
 
-function random_linear(theta) {
-	return function(x) {
-		const noise = math.ones(theta.size()[0], x.size()[1])
-			.map(_ => Math.random() * 600);
-		return math.add(math.multiply(theta, x), noise);
-	};
-}
+import { GradientDescentOptimizer, random_linear } from './GradientDescent';
 
-const f = random_linear(math.matrix([[ 10, 40 ]]));
-const x = math.matrix([
-	math.ones(100),
-	math.range(0, 100).map(x => x / 10)
-]);
-const y = f(x);
+const f = random_linear(math.matrix([[ Math.random() * 300, Math.random() * 10 ]]));
 
 
-function cost(theta, x, y) {
-	const error = math.subtract(math.multiply(theta, x), y);
-	return math.sum(math.square(error)) / (2 * x.size()[1]);
-}
-
-
-function gradientDescent(theta, x, y, learning_rate) {
-	const error = math.subtract(math.multiply(theta, x), y);
-	const d = math.multiply(
-		math.multiply(error, math.transpose(x)),
-		learning_rate / x.size()[1]
-	);
-	return math.subtract(theta, d);
-}
-
-
-let candidate = math.matrix([[ 1, 1 ]]).map(_ => 2 * Math.random() - 1);
-let costs = [];
-for (let i = 0; i < 1000; i++) {
-	candidate = gradientDescent(candidate, x, y, 0.03);
-	costs.push(cost(candidate, x, y));
-}
-
-const trainingData = [];
-for (let i = 0; i < 100; i++) {
-	trainingData.push({
-		x: i / 10,
-		y: y.subset(math.index(0, i))
-	});
-}
-
-const predictions = math.multiply(candidate, x);
-const predictionsData = [];
-for (let i = 0; i < 100; i++) {
-	predictionsData.push({
-		x: i / 10,
-		y: predictions.subset(math.index(0, i))
-	});
-}
+const chartProps = {
+	theme: VictoryTheme.material,
+	domainPadding: 1
+};
 
 
 class App extends Component {
+	constructor() {
+		super();
+
+		// This isn't directly tied to UI state and thus will be kept
+		// as an instance variable, not in component state.
+		this.optimizer = new GradientDescentOptimizer(f, 0.03);
+
+		this.state = {
+			costs: [],
+			trainingData: [],
+			predictionsData: [],
+			input: {
+				learningRate: this.optimizer.learningRate
+			},
+			isPlaying: false,
+		}
+
+		this.handleTick = this.handleTick.bind(this);
+		this.handleTogglePlaying = this.handleTogglePlaying.bind(this);
+		this.handleReset = this.handleReset.bind(this);
+	}
+
+	componentDidMount() {
+		window.requestAnimationFrame(this.handleTick);
+	}
+
+	handleTick() {
+		if (this.state.isPlaying) {
+			this.optimizer.minimize();
+			this.setState({
+				costs: this.optimizer.costs,
+				trainingData: this.optimizer.trainingData,
+				predictionsData: this.optimizer.predictionsData,
+			});
+		}
+
+		window.requestAnimationFrame(this.handleTick);
+	}
+
+	handleChange(key, event) {
+		this.optimizer[key] = event.target.value;
+		this.setState({
+			input: {
+				...this.state.input,
+				[key]: event.target.value,
+			}
+		});
+	}
+
+	handleTogglePlaying() {
+		this.setState({
+			isPlaying: !this.state.isPlaying
+		});
+	}
+
+	handleReset() {
+		this.optimizer.resetLearning();
+		this.setState({
+			costs: [],
+			trainingData: [],
+			predictionsData: [],
+		});
+	}
+
 	render() {
+		const {
+			costs,
+			trainingData,
+			predictionsData,
+			input,
+			isPlaying
+		} = this.state;
+
 		return (
-			<span>
-				<VictoryChart>
-					<VictoryLine
-						data={costs}
-					/>
-				</VictoryChart>
+			<span className="App">
+				<span>
+					<button onClick={this.handleTogglePlaying}>
+						{isPlaying ? 'Pause' : 'Play'}
+					</button>
 
-				<VictoryChart>
-					<VictoryScatter
-						data={trainingData}
-					/>
+					<button onClick={this.handleReset}>
+						Reset
+					</button>
 
-					<VictoryLine
-						data={predictionsData}
-					/>
-				</VictoryChart>
+					<label>
+						Learning Rate:
+						<input
+							type="number"
+							step={0.001}
+							value={input.learningRate}
+							onChange={this.handleChange.bind(this, 'learningRate')}
+						/>
+					</label>
+				</span>
+
+				<span className="Charts">
+					<span>
+						<VictoryChart {...chartProps}>
+							<VictoryLine
+								data={costs}
+							/>
+							<VictoryAxis
+								crossAxis={false}
+							/>
+							<VictoryAxis
+								crossAxis={false}
+								dependentAxis
+							/>
+						</VictoryChart>
+					</span>
+
+					<span>
+						<VictoryChart {...chartProps}>
+							<VictoryScatter
+								data={trainingData}
+							/>
+
+							<VictoryLine
+								data={predictionsData}
+							/>
+
+							<VictoryAxis
+								crossAxis={false}
+							/>
+							<VictoryAxis
+								crossAxis={false}
+								dependentAxis
+							/>
+						</VictoryChart>
+					</span>
+				</span>
 			</span>
 		);
 	}
