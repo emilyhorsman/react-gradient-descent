@@ -1,10 +1,11 @@
 import math from 'mathjs';
 
 
-export function random_linear(theta) {
+export function randomLinear() {
+	const theta = math.matrix([[ Math.random() * 350, Math.random() * 50 - 25 ]]);
 	return function(x) {
 		const noise = math.ones(theta.size()[0], x.size()[1])
-			.map(_ => Math.random() * 50);
+			.map(_ => Math.random() * 200);
 		return math.add(math.multiply(theta, x), noise);
 	};
 }
@@ -75,5 +76,21 @@ export class GradientDescentOptimizer {
 			});
 		}
 		return predictionsData;
+	}
+
+	get weightB() {
+		return this.candidate.subset(math.index(0, 0));
+	}
+
+	get weightX() {
+		return this.candidate.subset(math.index(0, 1));
+	}
+
+	set weightB(value) {
+		this.candidate.subset(math.index(0, 0), value);
+	}
+
+	set weightX(value) {
+		this.candidate.subset(math.index(0, 1), value);
 	}
 }

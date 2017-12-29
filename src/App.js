@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import math from 'mathjs';
 import {
 	VictoryAxis,
 	VictoryChart,
@@ -9,9 +8,7 @@ import {
 	VictoryTheme
 } from 'victory';
 
-import { GradientDescentOptimizer, random_linear } from './GradientDescent';
-
-const f = random_linear(math.matrix([[ Math.random() * 300, Math.random() * 10 ]]));
+import { GradientDescentOptimizer, randomLinear } from './GradientDescent';
 
 
 const chartProps = {
@@ -26,14 +23,16 @@ class App extends Component {
 
 		// This isn't directly tied to UI state and thus will be kept
 		// as an instance variable, not in component state.
-		this.optimizer = new GradientDescentOptimizer(f, 0.03);
+		this.optimizer = new GradientDescentOptimizer(randomLinear(), 0.03);
 
 		this.state = {
 			costs: [],
-			trainingData: [],
-			predictionsData: [],
+			trainingData: this.optimizer.trainingData,
+			predictionsData: this.optimizer.predictionsData,
 			input: {
-				learningRate: this.optimizer.learningRate
+				learningRate: this.optimizer.learningRate,
+				weightB: this.optimizer.weightB,
+				weightX: this.optimizer.weightX,
 			},
 			isPlaying: false,
 		}
@@ -41,6 +40,7 @@ class App extends Component {
 		this.handleTick = this.handleTick.bind(this);
 		this.handleTogglePlaying = this.handleTogglePlaying.bind(this);
 		this.handleReset = this.handleReset.bind(this);
+		this.handleNewData = this.handleNewData.bind(this);
 	}
 
 	componentDidMount() {
@@ -54,6 +54,11 @@ class App extends Component {
 				costs: this.optimizer.costs,
 				trainingData: this.optimizer.trainingData,
 				predictionsData: this.optimizer.predictionsData,
+				input: {
+					...this.state.input,
+					weightB: this.optimizer.weightB,
+					weightX: this.optimizer.weightX,
+				}
 			});
 		}
 
@@ -80,9 +85,17 @@ class App extends Component {
 		this.optimizer.resetLearning();
 		this.setState({
 			costs: [],
-			trainingData: [],
-			predictionsData: [],
+			trainingData: this.optimizer.trainingData,
+			predictionsData: this.optimizer.predictionsData,
 		});
+	}
+
+	handleNewData() {
+		this.optimizer = new GradientDescentOptimizer(
+			randomLinear(),
+			this.state.input.learningRate
+		);
+		this.handleReset();
 	}
 
 	render() {
@@ -93,6 +106,8 @@ class App extends Component {
 			input,
 			isPlaying
 		} = this.state;
+
+		const maxY = trainingData.reduce((m, d) => Math.max(m, d.y), 1);
 
 		return (
 			<span className="App">
@@ -105,6 +120,10 @@ class App extends Component {
 						Reset
 					</button>
 
+					<button onClick={this.handleNewData}>
+						New Data!
+					</button>
+
 					<label>
 						Learning Rate:
 						<input
@@ -112,6 +131,26 @@ class App extends Component {
 							step={0.001}
 							value={input.learningRate}
 							onChange={this.handleChange.bind(this, 'learningRate')}
+						/>
+					</label>
+
+					<label>
+						Learned Weights:
+
+						<input
+							type="number"
+							step={0.25}
+							value={input.weightB}
+							onChange={this.handleChange.bind(this, 'weightB')}
+							disabled={isPlaying}
+						/>
+
+						<input
+							type="number"
+							step={0.25}
+							value={input.weightX}
+							onChange={this.handleChange.bind(this, 'weightX')}
+							disabled={isPlaying}
 						/>
 					</label>
 				</span>
@@ -140,6 +179,7 @@ class App extends Component {
 
 							<VictoryLine
 								data={predictionsData}
+								domain={{ x: [0, 10], y: [0, maxY] }}
 							/>
 
 							<VictoryAxis
