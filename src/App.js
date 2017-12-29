@@ -112,75 +112,82 @@ class App extends Component {
 
 		return (
 			<span className="App">
-				<span className="Controls">
-					<p>
-					We want to draw a straight line through the <span style={{ color: 'tomato' }}>red data points</span> below, but not just any line!
-					In the future, we might be given a new <span style={{ color: 'tomato' }}>red data point</span> without knowing exactly where to put it.
-					We want to be able to put it on the straight line as the best prediction of where it should go as a straight line can offer.
-					The gradient descent algorithm lets us do this.
-					We start with a random initial assumption of the coefficients of our line.
-					Then we determine how far off this line is from all our <span style={{ color: 'tomato' }}>red data points</span> and call this our loss.
-					In one iteration, we adjust the coefficients so that our line takes a small step towards reducing the loss we just calculated.
-					Then we keep repeating!
-					This is called a <b>gradient descent algorithm</b> because we take the derivative of the function that computes our loss and look at which direction we can descend to reduce our loss.
-					This is ultimately an optimization problem where we are trying to minimize the loss as much as possible, best fitting our <span style={{ color: 'tomato' }}>red data points</span>.
-					</p>
+				<p className="App__Explainer">
+				We want to draw a straight line through the <span style={{ color: 'tomato' }}>red data points</span> below, but not just any line!
+				In the future, we might be given a new <span style={{ color: 'tomato' }}>red data point</span> without knowing exactly where to put it.
+				We want to be able to put it on the straight line as the best prediction of where it should go as a straight line can offer.
+				The gradient descent algorithm lets us do this.
+				We start with a random initial assumption of the coefficients of our <span style={{ color: 'magenta' }}>magenta line</span>.
+				Then we determine how far off this <span style={{ color: 'magenta' }}>line</span> is from all our <span style={{ color: 'tomato' }}>red data points</span> and call this our loss.
+				In one iteration, we adjust the coefficients so that our <span style={{ color: 'magenta' }}>line</span> takes a small step towards reducing the loss we just calculated.
+				Then we keep repeating!
+				This is called a <b>gradient descent algorithm</b> because we take the derivative of the function that computes our loss and look at which direction we can descend to reduce our loss.
+				This is ultimately an optimization problem where we are trying to minimize the loss as much as possible, best fitting our <span style={{ color: 'tomato' }}>red data points</span>.
+				</p>
 
-					<span>
-						<button onClick={this.handleTogglePlaying}>
+				<span className="Controls">
+					<span className="Controls__Control">
+						<button onClick={this.handleTogglePlaying} className="Button">
 							{isPlaying ? 'Pause' : 'Play'}
 						</button>
-
-						<p>
-							Hitting Play will start running the optimizer!
-							It will keep computing iterations that have our <span style={{ color: 'magenta' }}>magenta line</span> get closer to fitting our <span style={{ color: 'tomato' }}>red data points</span> until you hit Pause.
-						</p>
 					</span>
 
-					<span>
-						<button onClick={this.handleReset}>
+					<p className="Controls__Help">
+						Hitting Play will start running the optimizer!
+						It will keep computing iterations that have our <span style={{ color: 'magenta' }}>magenta line</span> get closer to fitting our <span style={{ color: 'tomato' }}>red data points</span> until you hit Pause.
+					</p>
+
+					<span className="Controls__Control">
+						<button onClick={this.handleReset} className="Button">
 							Reset
 						</button>
-
-						<p>
-							This will wipe out the iterations we’ve computed so far, but won’t touch your carefully chosen learning rate.
-						</p>
 					</span>
 
-					<span>
-						<button onClick={this.handleNewData}>
+					<p className="Controls__Help">
+						This will wipe out the iterations we’ve computed so far, but won’t touch your carefully chosen learning rate.
+					</p>
+
+					<span className="Controls__Control">
+						<button onClick={this.handleNewData} className="Button">
 							New Data!
 						</button>
-
-						<p>
-							Maybe you’re tired of these <span style={{ color: 'tomato' }}>red data points</span> and want to exchange them for some new ones.
-						</p>
 					</span>
 
-					<span>
+					<p className="Controls__Help">
+						Maybe you’re tired of these <span style={{ color: 'tomato' }}>red data points</span> and want to exchange them for some new ones.
+					</p>
+
+					<span className="Controls__Control Controls__Control--align-start">
 						<label>
-							Learning Rate:
+							<span className="Controls__Label">
+								Learning Rate:
+							</span>
+
 							<input
+								className="Input"
 								type="number"
 								step={0.001}
 								value={input.learningRate}
 								onChange={this.handleChange.bind(this, 'learningRate')}
 							/>
 						</label>
-
-						<p>
-							This value tells our optimizer how large a step to take each iteration.
-							If the graph on the left blows up and makes no sense at all, the optimizer probably descended too far and overshot back up a hill — lower the value.
-							If the <span style={{ color: 'magenta' }}>magenta line</span> takes too long to fit the points — raise this value.
-							If the <span stlye={{ color: 'magenta' }}>magenta line</span> changes its slope but doesn’t seem to change its offset — raise this value.
-						</p>
 					</span>
 
-					<span>
+					<p className="Controls__Help">
+						This value tells our optimizer how large a step to take each iteration.
+						If the graph on the left blows up and makes no sense at all, the optimizer probably descended too far and overshot back up a hill — lower the value.
+						If the <span style={{ color: 'magenta' }}>magenta line</span> takes too long to fit the points — raise this value.
+						If the <span stlye={{ color: 'magenta' }}>magenta line</span> changes its slope but doesn’t seem to change its offset — raise this value.
+					</p>
+
+					<span className="Controls__Control Controls__Control--align-start">
 						<label>
-							Learned Weights:
+							<span className="Controls__Label">
+								Learned Weights:
+							</span>
 
 							<input
+								className="Input"
 								type="number"
 								step={0.25}
 								value={input.weightB}
@@ -189,6 +196,7 @@ class App extends Component {
 							/>
 
 							<input
+								className="Input"
 								type="number"
 								step={0.25}
 								value={input.weightX}
@@ -196,85 +204,79 @@ class App extends Component {
 								disabled={isPlaying}
 							/>
 						</label>
-
-						<p>
-							These are the coefficients of our <span style={{ color: 'magenta' }}>magenta line</span>!
-							They will be randomly selected at first, and then will change as you run the optimizer.
-						</p>
 					</span>
+
+					<p className="Controls__Help">
+						These are the coefficients of our <span style={{ color: 'magenta' }}>magenta line</span>!
+						They will be randomly selected at first, and then will change as you run the optimizer.
+					</p>
 				</span>
 
-				<span className="Charts">
-					<span>
-						<VictoryChart {...chartProps}>
-							<VictoryLabel
-								text="Mean Squared Error over descent iterations"
-								x={50}
-								y={30}
-							/>
+				<VictoryChart {...chartProps} className="Chart Chart--left">
+					<VictoryLabel
+						text="Mean squared error over descent iterations"
+						x={50}
+						y={30}
+					/>
 
-							<VictoryLine
-								data={costs}
-							/>
-							<VictoryAxis
-								crossAxis={false}
-							/>
-							<VictoryAxis
-								fixLabelOverlap={true}
-								crossAxis={false}
-								dependentAxis
-							/>
+					<VictoryLine
+						data={costs}
+					/>
+					<VictoryAxis
+						crossAxis={false}
+					/>
+					<VictoryAxis
+						fixLabelOverlap={true}
+						crossAxis={false}
+						dependentAxis
+					/>
 
-							{!isPlaying && costs.length === 0 &&
-								<VictoryLabel
-									text="Press Play!"
-									x={175}
-									y={175}
-									textAnchor="middle"
-									style={{
-										fontSize: 24,
-										fill: 'grey',
-										stroke: 'grey'
-									}}
-								/>
+					{!isPlaying && costs.length === 0 &&
+						<VictoryLabel
+							text="Press Play!"
+							x={175}
+							y={175}
+							textAnchor="middle"
+							style={{
+								fontSize: 24,
+								fill: 'grey',
+								stroke: 'grey'
+							}}
+						/>
+					}
+
+				</VictoryChart>
+
+				<VictoryChart {...chartProps} className="Chart Chart--right">
+					<VictoryScatter
+						data={trainingData}
+						style={{
+							data: {
+								fill: 'tomato'
 							}
+						}}
+					/>
 
-						</VictoryChart>
-					</span>
+					<VictoryLine
+						data={predictionsData}
+						domain={{ x: [0, 10], y: [0, maxY] }}
+						style={{
+							data: {
+								stroke: 'magenta',
+								strokeWidth: 3,
+								strokeLinecap: 'round'
+							}
+						}}
+					/>
 
-					<span>
-						<VictoryChart {...chartProps}>
-							<VictoryScatter
-								data={trainingData}
-								style={{
-									data: {
-										fill: 'tomato'
-									}
-								}}
-							/>
-
-							<VictoryLine
-								data={predictionsData}
-								domain={{ x: [0, 10], y: [0, maxY] }}
-								style={{
-									data: {
-										stroke: 'magenta',
-										strokeWidth: 3,
-										strokeLinecap: 'round'
-									}
-								}}
-							/>
-
-							<VictoryAxis
-								crossAxis={false}
-							/>
-							<VictoryAxis
-								crossAxis={false}
-								dependentAxis
-							/>
-						</VictoryChart>
-					</span>
-				</span>
+					<VictoryAxis
+						crossAxis={false}
+					/>
+					<VictoryAxis
+						crossAxis={false}
+						dependentAxis
+					/>
+				</VictoryChart>
 			</span>
 		);
 	}

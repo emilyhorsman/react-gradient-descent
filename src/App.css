@@ -1,27 +1,91 @@
-#root {
-    width: 100vw;
-    height: 100vh;
+.App {
+    display: grid;
+    grid-gap: 1rem;
+    padding: 1rem;
 }
 
 
-.App {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.Chart {
+    grid-row-start: 2;
+}
+
+
+.Chart--left {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+
+.Chart--right {
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+
+.App__Explainer {
+    grid-column-start: 1;
+    grid-row-start: span 2;
+
+    line-height: 1.6;
+    margin: 0;
 }
 
 
 .Controls {
-    display: flex;
-    align-items: left;
-    flex-direction: column;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+
+    display: grid;
+    align-items: center;
+    grid-gap: 1rem;
 }
 
 
-.Charts {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
+.Controls__Control {
+    grid-column: 1;
+}
+
+
+.Controls__Control--align-start {
+    align-self: start;
+}
+
+
+.Controls__Help {
+    grid-column: 2;
+
+    color: darkslategray;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    margin: 0;
+}
+
+
+.Controls__Label {
+    color: darkslategray;
+    font-size: 0.9rem;
+}
+
+
+.Input {
+    display: block;
+    margin-top: 0.25rem;
+}
+
+
+.Button {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid rgba(0,0,0,.05);
+    border-radius: 3px;
+
+    box-shadow: 0 0 0 1px rgba(0,0,0,.15);
+
+    background-color: transparent;
+    color: darkslategray;
+    font-weight: 300;
+    font-size: 16px;
+    text-align: center;
 }
