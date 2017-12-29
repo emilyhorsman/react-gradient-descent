@@ -12,6 +12,13 @@
 }
 
 
+.Controls {
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+}
+
+
 .Charts {
     display: flex;
     justify-content: center;
