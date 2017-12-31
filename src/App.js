@@ -115,14 +115,17 @@ class App extends Component {
 				<p className="App__Explainer">
 				We want to draw a straight line through the <span style={{ color: 'tomato' }}>red data points</span> below, but not just any line!
 				In the future, we might be given a new <span style={{ color: 'tomato' }}>red data point</span> without knowing exactly where to put it.
-				We want to be able to put it on the straight line as the best prediction of where it should go as a straight line can offer.
+				We want to be able to use the straight line as the best prediction that a strainght line can offer of where the new point should go.
 				The gradient descent algorithm lets us do this.
-				We start with a random initial assumption of the coefficients of our <span style={{ color: 'magenta' }}>magenta line</span>.
-				Then we determine how far off this <span style={{ color: 'magenta' }}>line</span> is from all our <span style={{ color: 'tomato' }}>red data points</span> and call this our loss.
-				In one iteration, we adjust the coefficients so that our <span style={{ color: 'magenta' }}>line</span> takes a small step towards reducing the loss we just calculated.
-				Then we keep repeating!
-				This is called a <b>gradient descent algorithm</b> because we take the derivative of the function that computes our loss and look at which direction we can descend to reduce our loss.
+				We start with a random initial assumption of the parameters of our <span style={{ color: 'magenta' }}>magenta line</span>.
+				Then we determine how far off this <span style={{ color: 'magenta' }}>line</span> is from all our <span style={{ color: 'tomato' }}>red data points</span> and call this our <b>loss</b> — we compute this with the “mean squared error”.
+				In one iteration, we adjust the parameters so that our <span style={{ color: 'magenta' }}>line</span> takes a small step towards reducing the loss we just calculated.
+				Then we keep repeating until we can’t seem to descend any further!
+				This is called a <b>gradient descent algorithm</b> because we get the slopes of any steps we could take from where we are and then descend down the steepest one, reducing our loss.
+				The slopes are all the partial derivatives of our loss function — producing a gradient.
 				This is ultimately an optimization problem where we are trying to minimize the loss as much as possible, best fitting our <span style={{ color: 'tomato' }}>red data points</span>.
+				<br /><br />
+				You can read more about gradient descent <a href="http://cs231n.github.io/optimization-1/" target="_blank" rel="noopener noreferrer">here</a>.
 				</p>
 
 				<span className="Controls">
