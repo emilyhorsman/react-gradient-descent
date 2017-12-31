@@ -24,7 +24,7 @@ class App extends Component {
 
 		// This isn't directly tied to UI state and thus will be kept
 		// as an instance variable, not in component state.
-		this.optimizer = new GradientDescentOptimizer(randomLinear(), 0.03);
+		this.optimizer = new GradientDescentOptimizer(randomLinear(), 0.008);
 
 		this.state = {
 			costs: [],
